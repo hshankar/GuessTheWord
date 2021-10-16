@@ -5,5 +5,9 @@ public interface GuessStrategy {
 
   String nextGuess();
 
-  void updateResult(String guess, int matches);
+  default void updateResult(String guess, int matches) {};
+
+  default void maxAttemptsReached(String word, int attempts) {}
+
+  default void foundMatch(String guess, int attempts) {};
 }

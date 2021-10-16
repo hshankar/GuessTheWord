@@ -18,9 +18,4 @@ public class RandomGuessStrategy implements GuessStrategy {
   public String nextGuess() {
     return _words.get(ThreadLocalRandom.current().nextInt(_words.size()));
   }
-
-  @Override
-  public void updateResult(String guess, int matches) {
-    // No op
-  }
 }

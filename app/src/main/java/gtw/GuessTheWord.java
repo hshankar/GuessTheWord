@@ -25,9 +25,11 @@ public class GuessTheWord {
       numAttempts++;
       if (guess.equals(word)) {
         found = true;
+        _guessStrategy.foundMatch(guess, numAttempts);
         break;
       }
       if (numAttempts == MAX_ATTEMPTS) {
+        _guessStrategy.maxAttemptsReached(word, numAttempts);
         break;
       }
       int matches = getNumMatchedChars(getHistogram(word), guess);
