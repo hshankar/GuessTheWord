@@ -1,5 +1,6 @@
 package gtw;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -7,17 +8,25 @@ import static org.mockito.Mockito.*;
 
 
 public class TestGuessTheWord {
+  WordPicker _wp;
+  Vocabulary _vocab;
+  GuessStrategy _gs;
+  GuessTheWord _gtw;
+
+  @Before
+  public void setup() {
+    _wp = mock(WordPicker.class);
+    _vocab = mock(Vocabulary.class);
+    _gs = mock(GuessStrategy.class);
+    _gtw = new GuessTheWord(_wp, _vocab, _gs);
+  }
+
   @Test
   public void firstMatch() {
-    WordPicker wp = mock(WordPicker.class);
-    Vocabulary vocab = mock(Vocabulary.class);
-    GuessStrategy gs = mock(GuessStrategy.class);
-
     String word = "word";
-    when(wp.pickWord()).thenReturn(word);
-    when(gs.nextGuess()).thenReturn(word);
-    GuessTheWord gtw = new GuessTheWord(wp, vocab, gs);
-    RoundResult result = gtw.playOneRound();
+    when(_wp.pickWord()).thenReturn(word);
+    when(_gs.nextGuess()).thenReturn(word);
+    RoundResult result = _gtw.playOneRound();
     assertThat(result.isFound()).isTrue();
     assertThat(result.getLength()).isEqualTo(word.length());
     assertThat(result.getNumAttempts()).isEqualTo(1);
@@ -26,15 +35,10 @@ public class TestGuessTheWord {
 
   @Test
   public void secondMatch() {
-    WordPicker wp = mock(WordPicker.class);
-    Vocabulary vocab = mock(Vocabulary.class);
-    GuessStrategy gs = mock(GuessStrategy.class);
-
     String word = "word";
-    when(wp.pickWord()).thenReturn(word);
-    when(gs.nextGuess()).thenReturn(word + "foo").thenReturn(word);
-    GuessTheWord gtw = new GuessTheWord(wp, vocab, gs);
-    RoundResult result = gtw.playOneRound();
+    when(_wp.pickWord()).thenReturn(word);
+    when(_gs.nextGuess()).thenReturn(word + "foo").thenReturn(word);
+    RoundResult result = _gtw.playOneRound();
     assertThat(result.isFound()).isTrue();
     assertThat(result.getLength()).isEqualTo(word.length());
     assertThat(result.getNumAttempts()).isEqualTo(2);
@@ -43,18 +47,24 @@ public class TestGuessTheWord {
 
   @Test
   public void noMatch() {
-    WordPicker wp = mock(WordPicker.class);
-    Vocabulary vocab = mock(Vocabulary.class);
-    GuessStrategy gs = mock(GuessStrategy.class);
-
     String word = "word";
-    when(wp.pickWord()).thenReturn(word);
-    when(gs.nextGuess()).thenReturn(word + "foo");
-    GuessTheWord gtw = new GuessTheWord(wp, vocab, gs);
-    RoundResult result = gtw.playOneRound();
+    when(_wp.pickWord()).thenReturn(word);
+    when(_gs.nextGuess()).thenReturn(word + "foo");
+    RoundResult result = _gtw.playOneRound();
     assertThat(result.isFound()).isFalse();
     assertThat(result.getLength()).isEqualTo(word.length());
     assertThat(result.getNumAttempts()).isEqualTo(GuessTheWord.MAX_ATTEMPTS);
     assertThat(result.getGuessTime()).isGreaterThan(0);
+  }
+
+  @Test
+  public void matchedChars() {
+    assertThat(_gtw.getNumMatchedChars("abc", "abc")).isEqualTo(3);
+    assertThat(_gtw.getNumMatchedChars("abc", "abbc")).isEqualTo(3);
+    assertThat(_gtw.getNumMatchedChars("", "abbc")).isEqualTo(0);
+    assertThat(_gtw.getNumMatchedChars("abc", "")).isEqualTo(0);
+    assertThat(_gtw.getNumMatchedChars("feed", "deer")).isEqualTo(3);
+    assertThat(_gtw.getNumMatchedChars("feed", "dear")).isEqualTo(2);
+    assertThat(_gtw.getNumMatchedChars("fEEd", "reEd")).isEqualTo(3);
   }
 }

@@ -53,4 +53,8 @@ public class GuessTheWord {
     }
     return matches;
   }
+
+  int getNumMatchedChars(String word, String guess) {
+    return getNumMatchedChars(getHistogram(word), guess);
+  }
 }
