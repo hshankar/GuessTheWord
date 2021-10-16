@@ -12,13 +12,14 @@ public class TestGuessTheWord {
   Vocabulary _vocab;
   GuessStrategy _gs;
   GuessTheWord _gtw;
+  int _maxAttempts = 100;
 
   @Before
   public void setup() {
     _wp = mock(WordPicker.class);
     _vocab = mock(Vocabulary.class);
     _gs = mock(GuessStrategy.class);
-    _gtw = new GuessTheWord(_wp, _vocab, _gs);
+    _gtw = new GuessTheWord(_wp, _vocab, _gs, _maxAttempts);
   }
 
   @Test
@@ -30,7 +31,7 @@ public class TestGuessTheWord {
     assertThat(result.isFound()).isTrue();
     assertThat(result.getLength()).isEqualTo(word.length());
     assertThat(result.getNumAttempts()).isEqualTo(1);
-    assertThat(result.getGuessTime()).isGreaterThan(0);
+    assertThat(result.getGuessTimeNs()).isGreaterThan(0);
   }
 
   @Test
@@ -42,7 +43,7 @@ public class TestGuessTheWord {
     assertThat(result.isFound()).isTrue();
     assertThat(result.getLength()).isEqualTo(word.length());
     assertThat(result.getNumAttempts()).isEqualTo(2);
-    assertThat(result.getGuessTime()).isGreaterThan(0);
+    assertThat(result.getGuessTimeNs()).isGreaterThan(0);
   }
 
   @Test
@@ -53,8 +54,8 @@ public class TestGuessTheWord {
     RoundResult result = _gtw.playOneRound();
     assertThat(result.isFound()).isFalse();
     assertThat(result.getLength()).isEqualTo(word.length());
-    assertThat(result.getNumAttempts()).isEqualTo(GuessTheWord.MAX_ATTEMPTS);
-    assertThat(result.getGuessTime()).isGreaterThan(0);
+    assertThat(result.getNumAttempts()).isEqualTo(_maxAttempts);
+    assertThat(result.getGuessTimeNs()).isGreaterThan(0);
   }
 
   @Test

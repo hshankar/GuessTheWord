@@ -2,23 +2,23 @@ package gtw;
 
 public class RoundResult {
   private final boolean _found;
-  private final int _length;
+  private final String _word;
   private final int _numAttempts;
   private final long _guessTime;
 
-  private RoundResult(boolean found, int length, int numAttempts, long guessTime) {
+  private RoundResult(boolean found, String word, int numAttempts, long guessTime) {
     _found = found;
-    _length = length;
+    _word = word;
     _numAttempts = numAttempts;
     _guessTime = guessTime;
   }
 
-  public static RoundResult found(int length, int numAttempts, long guessTime) {
-    return new RoundResult(true, length, numAttempts, guessTime);
+  public static RoundResult found(String word, int numAttempts, long guessTime) {
+    return new RoundResult(true, word, numAttempts, guessTime);
   }
 
-  public static RoundResult notFound(int length, int numAttempts, long guessTime) {
-    return new RoundResult(false, length, numAttempts, guessTime);
+  public static RoundResult notFound(String word, int numAttempts, long guessTime) {
+    return new RoundResult(false, word, numAttempts, guessTime);
   }
 
   public boolean isFound() {
@@ -29,11 +29,11 @@ public class RoundResult {
     return _numAttempts;
   }
 
-  public int getLength() {
-    return _length;
+  public String getWord() {
+    return _word;
   }
 
-  public long getGuessTime() {
+  public long getGuessTimeNs() {
     return _guessTime;
   }
 }

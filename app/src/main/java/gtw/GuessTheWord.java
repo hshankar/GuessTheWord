@@ -1,15 +1,16 @@
 package gtw;
 
 public class GuessTheWord {
-  public static int MAX_ATTEMPTS = 100;
+  private final int _maxAttempts;
   WordPicker _wordPicker;
   Vocabulary _vocab;
   GuessStrategy _guessStrategy;
 
-  public GuessTheWord(WordPicker wordPicker, Vocabulary vocab, GuessStrategy guessStrategy) {
+  public GuessTheWord(WordPicker wordPicker, Vocabulary vocab, GuessStrategy guessStrategy, int maxAttempts) {
     _wordPicker = wordPicker;
     _vocab = vocab;
     _guessStrategy = guessStrategy;
+    _maxAttempts = maxAttempts;
   }
 
   public RoundResult playOneRound() {
@@ -28,15 +29,15 @@ public class GuessTheWord {
         _guessStrategy.foundMatch(guess, numAttempts);
         break;
       }
-      if (numAttempts == MAX_ATTEMPTS) {
+      if (numAttempts == _maxAttempts) {
         _guessStrategy.maxAttemptsReached(word, numAttempts);
         break;
       }
       int matches = getNumMatchedChars(getHistogram(word), guess);
       _guessStrategy.updateResult(guess, matches);
     }
-    return found ? RoundResult.found(word.length(), numAttempts, guessTime)
-        : RoundResult.notFound(word.length(), numAttempts, guessTime);
+    return found ? RoundResult.found(word, numAttempts, guessTime)
+        : RoundResult.notFound(word, numAttempts, guessTime);
   }
 
   private int[] getHistogram(String word) {
