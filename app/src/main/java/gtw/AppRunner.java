@@ -1,5 +1,6 @@
 package gtw;
 
+import gtw.guessstrategies.UserInputGuessStrategy;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

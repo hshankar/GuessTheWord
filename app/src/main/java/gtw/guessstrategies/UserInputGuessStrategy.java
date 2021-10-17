@@ -1,5 +1,7 @@
-package gtw;
+package gtw.guessstrategies;
 
+import gtw.GuessStrategy;
+import gtw.Vocabulary;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
