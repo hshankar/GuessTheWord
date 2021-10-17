@@ -1,5 +1,6 @@
 package gtw;
 
+import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +19,7 @@ public class TestGuessTheWord {
   public void setup() {
     _wp = mock(WordPicker.class);
     _vocab = mock(Vocabulary.class);
+    when(_vocab.getWords()).thenReturn(Stream.<String>builder().add("word").build());
     _gs = mock(GuessStrategy.class);
     _gtw = new GuessTheWord(_wp, _vocab, _gs, _maxAttempts);
   }

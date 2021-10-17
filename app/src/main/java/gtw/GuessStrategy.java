@@ -10,4 +10,6 @@ public interface GuessStrategy {
   default void maxAttemptsReached(String word, int attempts) {}
 
   default void foundMatch(String guess, int attempts) {};
+
+  default void invalidGuess(String guess, int numAttempts) {};
 }

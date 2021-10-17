@@ -52,4 +52,9 @@ public class UserInputGuessStrategy implements GuessStrategy {
   public void maxAttemptsReached(String word, int numAttempts) {
     System.out.println("You lost. Reached max attempts: " + numAttempts + ". The word was: " + word);
   }
+
+  @Override
+  public void invalidGuess(String guess, int numAttempts) {
+    System.out.println("Guess: " + guess + " is invalid. Must be at least 3 characters and a valid word in the vocabulary");
+  }
 }
