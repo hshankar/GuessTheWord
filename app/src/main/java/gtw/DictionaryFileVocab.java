@@ -15,7 +15,7 @@ public class DictionaryFileVocab implements Vocabulary {
   @Override
   public Stream<String> getWords() {
     try {
-      return Files.lines(_vocabFile);
+      return Files.lines(_vocabFile).map(String::toLowerCase).filter(Utils::validChars);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

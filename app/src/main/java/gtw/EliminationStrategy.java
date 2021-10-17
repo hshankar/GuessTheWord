@@ -24,7 +24,7 @@ public class EliminationStrategy implements GuessStrategy {
     return new Iterator<>() {
       boolean[] covered = new boolean[26];
       String next = null;
-      Iterator<String > words = vocab.getWords().map(String::toLowerCase).iterator();
+      Iterator<String> words = vocab.getWords().map(String::toLowerCase).iterator();
 
       @Override
       public boolean hasNext() {
@@ -36,7 +36,7 @@ public class EliminationStrategy implements GuessStrategy {
         }
         while (words.hasNext()) {
           String word = words.next();
-          if (word.length() == 4 && allDifferenAndNotCovered(word, covered)) {
+          if (word.length() >= 3 && word.length() <= 5 && allDifferenAndNotCovered(word, covered)) {
             next = word;
             return true;
           }
@@ -46,11 +46,11 @@ public class EliminationStrategy implements GuessStrategy {
 
       private boolean allDifferenAndNotCovered(String word, boolean[] covered) {
         boolean[] seen = new boolean[26];
-        for ( char c : word.toCharArray()) {
-          if (seen[c-'a'] || covered[c-'a']) {
+        for (char c : word.toCharArray()) {
+          if (seen[c - 'a'] || covered[c - 'a']) {
             return false;
           }
-          seen[c-'a'] = true;
+          seen[c - 'a'] = true;
         }
         return true;
       }
@@ -58,7 +58,7 @@ public class EliminationStrategy implements GuessStrategy {
       @Override
       public String next() {
         for (char c : next.toCharArray()) {
-          covered[c-'a'] = true;
+          covered[c - 'a'] = true;
         }
         String ret = next;
         next = null;

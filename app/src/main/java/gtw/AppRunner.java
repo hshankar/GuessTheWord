@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 
 public class AppRunner {
   static Path VOCAB_FILE = Paths.get("/usr/share/dict/words");
-  static int MAX_ATTEMPTS = 1000;
+  static int MAX_ATTEMPTS = 100;
 
   public static void main(String[] args) {
     // GuessStrategy guessStrategy = new RandomGuessStrategy();

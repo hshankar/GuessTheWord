@@ -8,4 +8,13 @@ public class Utils {
     }
     return hist;
   }
+
+  public static boolean validChars(String word) {
+    for (char c : word.toLowerCase().toCharArray()) {
+      if (c < 'a' || c > 'z') {
+        return false;
+      }
+    }
+    return true;
+  }
 }
