@@ -6,11 +6,12 @@ import java.nio.file.Paths;
 
 public class AppRunner {
   static Path VOCAB_FILE = Paths.get("/usr/share/dict/words");
-  static int MAX_ATTEMPTS = 100;
+  static int MAX_ATTEMPTS = 1000;
 
   public static void main(String[] args) {
-    GuessStrategy guessStrategy = new RandomGuessStrategy();
+    // GuessStrategy guessStrategy = new RandomGuessStrategy();
     // GuessStrategy guessStrategy = new UserInputGuessStrategy();
+    GuessStrategy guessStrategy = new EliminationStrategy();
 
     DictionaryFileVocab vocab = new DictionaryFileVocab(VOCAB_FILE);
     WordPicker wp = new RandomWordPickerWithLengthLimit(vocab, 4, 8);

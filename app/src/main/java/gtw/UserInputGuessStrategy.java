@@ -50,6 +50,6 @@ public class UserInputGuessStrategy implements GuessStrategy {
 
   @Override
   public void maxAttemptsReached(String word, int numAttempts) {
-    System.out.println("Your lost. Reached max attempts: " + numAttempts + ". The word was: " + word);
+    System.out.println("You lost. Reached max attempts: " + numAttempts + ". The word was: " + word);
   }
 }

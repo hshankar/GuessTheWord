@@ -33,23 +33,15 @@ public class GuessTheWord {
         _guessStrategy.maxAttemptsReached(word, numAttempts);
         break;
       }
-      int matches = getNumMatchedChars(getHistogram(word), guess);
+      int matches = getNumMatchedChars(Utils.getHistogram(word), guess);
       _guessStrategy.updateResult(guess, matches);
     }
     return found ? RoundResult.found(word, numAttempts, guessTime)
         : RoundResult.notFound(word, numAttempts, guessTime);
   }
 
-  private int[] getHistogram(String word) {
-    int[] hist = new int[26];
-    for (char c : word.toLowerCase().toCharArray()) {
-      hist[c - 'a']++;
-    }
-    return hist;
-  }
-
   private int getNumMatchedChars(int[] wordHist, String guess) {
-    int[] guessHist = getHistogram(guess);
+    int[] guessHist = Utils.getHistogram(guess);
     int matches = 0;
     for (int i = 0; i < wordHist.length; i++) {
       matches += Math.min(wordHist[i], guessHist[i]);
@@ -58,6 +50,6 @@ public class GuessTheWord {
   }
 
   int getNumMatchedChars(String word, String guess) {
-    return getNumMatchedChars(getHistogram(word), guess);
+    return getNumMatchedChars(Utils.getHistogram(word), guess);
   }
 }

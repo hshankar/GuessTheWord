@@ -29,7 +29,7 @@ public class TestGuessTheWord {
     when(_gs.nextGuess()).thenReturn(word);
     RoundResult result = _gtw.playOneRound();
     assertThat(result.isFound()).isTrue();
-    assertThat(result.getLength()).isEqualTo(word.length());
+    assertThat(result.getWord()).isEqualTo(word);
     assertThat(result.getNumAttempts()).isEqualTo(1);
     assertThat(result.getGuessTimeNs()).isGreaterThan(0);
   }
@@ -41,7 +41,7 @@ public class TestGuessTheWord {
     when(_gs.nextGuess()).thenReturn(word + "foo").thenReturn(word);
     RoundResult result = _gtw.playOneRound();
     assertThat(result.isFound()).isTrue();
-    assertThat(result.getLength()).isEqualTo(word.length());
+    assertThat(result.getWord()).isEqualTo(word);
     assertThat(result.getNumAttempts()).isEqualTo(2);
     assertThat(result.getGuessTimeNs()).isGreaterThan(0);
   }
@@ -53,7 +53,7 @@ public class TestGuessTheWord {
     when(_gs.nextGuess()).thenReturn(word + "foo");
     RoundResult result = _gtw.playOneRound();
     assertThat(result.isFound()).isFalse();
-    assertThat(result.getLength()).isEqualTo(word.length());
+    assertThat(result.getWord()).isEqualTo(word);
     assertThat(result.getNumAttempts()).isEqualTo(_maxAttempts);
     assertThat(result.getGuessTimeNs()).isGreaterThan(0);
   }
