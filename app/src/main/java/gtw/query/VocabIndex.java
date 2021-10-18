@@ -2,9 +2,9 @@ package gtw.query;
 
 import gtw.Vocabulary;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class VocabIndex {
@@ -40,34 +40,24 @@ public class VocabIndex {
     }
   }
 
-  public List<String> query(Query query) {
-    List<String> ret = new ArrayList<>(query.getNumResults());
+  public Stream<String> query(Query query) {
+    Stream<String> ret;
     boolean[] reqChars = query.getCharsPresent();
-    Intersector intersector = null;
-    for (int i = 0; i < reqChars.length; ++i) {
-      if (reqChars[i]) {
-        if (intersector == null) {
-          intersector = new Intersector(Arrays.copyOf(_invIdx[i], _counts[i]));
-        } else {
-          intersector.add(Arrays.copyOf(_invIdx[i], _counts[i]));
-        }
-      }
-    }
-    if (intersector == null) {
-      ret = new ArrayList<>(_words);
+    if (reqChars == null) {
+      ret = _words.stream();
     } else {
-      int[] indices = intersector.getIntersection();
-      for (int i : indices) {
-        ret.add(_words.get(i));
+      List<int[]> arrays = new ArrayList<>(reqChars.length);
+      int[] bounds = new int[reqChars.length];
+      for (int i = 0; i < reqChars.length; ++i) {
+        arrays.add(_invIdx[i]);
+        bounds[i] = _counts[i];
       }
+      ret = Intersector.intersectSortedArrays(arrays, bounds).mapToObj(_words::get);
     }
-    ret = ret.size() < query.getNumResults() ? ret : ret.subList(0, query.getNumResults());
     if (query.getMinLength() > 0 || query.getMaxLength() < Integer.MAX_VALUE) {
-      return ret.stream()
-          .filter(s -> s.length() >= query.getMinLength() && s.length() <= query.getMaxLength())
-          .collect(Collectors.toList());
+      ret = ret.filter(s -> s.length() >= query.getMinLength() && s.length() <= query.getMaxLength());
     }
-    return ret;
+    return ret.limit(query.getNumResults());
   }
 
   private void ensureSpace(char c) {

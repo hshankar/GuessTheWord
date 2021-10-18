@@ -1,6 +1,7 @@
 package gtw;
 
 import gtw.guessstrategies.UserInputGuessStrategy;
+import gtw.guessstrategies.WeighingStrategy;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -11,8 +12,9 @@ public class AppRunner {
 
   public static void main(String[] args) {
     // GuessStrategy guessStrategy = new RandomGuessStrategy();
-    GuessStrategy guessStrategy = new UserInputGuessStrategy();
+    // GuessStrategy guessStrategy = new UserInputGuessStrategy();
     // GuessStrategy guessStrategy = new EliminationStrategy();
+    GuessStrategy guessStrategy = new WeighingStrategy();
 
     DictionaryFileVocab vocab = new DictionaryFileVocab(VOCAB_FILE);
     WordPicker wp = new RandomWordPickerWithLengthLimit(vocab, 4, 8);

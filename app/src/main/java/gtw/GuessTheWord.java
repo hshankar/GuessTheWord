@@ -21,6 +21,7 @@ public class GuessTheWord {
 
   public RoundResult playOneRound() {
     String word = _wordPicker.pickWord().toLowerCase();
+    System.out.println("Word is " + word);
     _guessStrategy.reset(_vocab, word.length());
     int numAttempts = 0;
     boolean found = false;
