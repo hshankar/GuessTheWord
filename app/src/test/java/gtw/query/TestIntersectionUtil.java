@@ -3,11 +3,11 @@ package gtw.query;
 import java.util.List;
 import org.junit.Test;
 
-import static gtw.query.Intersector.*;
+import static gtw.query.IntersectionUtil.*;
 import static org.assertj.core.api.Assertions.*;
 
 
-public class TestIntersector {
+public class TestIntersectionUtil {
   @Test
   public void nWayIntersect() {
     assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}))).containsExactly(3, 5);
@@ -26,26 +26,26 @@ public class TestIntersector {
 
   @Test
   public void nWayIntersectWithBounds() {
-    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), new int[]{1, 1})).containsExactly(3);
-    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), new int[]{2, 0})).containsExactly();
-    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), new int[]{0, 2})).containsExactly();
-    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), new int[]{1, 2})).containsExactly(3);
-    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), new int[]{2, 1})).containsExactly(3);
-    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), new int[]{2, 2})).containsExactly(3, 5);
+    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), List.of(1, 1))).containsExactly(3);
+    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), List.of(2, 0))).containsExactly();
+    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), List.of(0, 2))).containsExactly();
+    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), List.of(1, 2))).containsExactly(3);
+    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), List.of(2, 1))).containsExactly(3);
+    assertThat(getIntersectionArray(List.of(new int[]{3, 5}, new int[]{3, 5}), List.of(2, 2))).containsExactly(3, 5);
 
     assertThat(
         getIntersectionArray(List.of(new int[]{1, 2, 3, 4, 5, 6}, new int[]{2, 4, 6}, new int[]{2, 6, 8, 10, 11}),
-            new int[]{2, 2, 3})).containsExactly(2);
+            List.of(2, 2, 3))).containsExactly(2);
     assertThat(
         getIntersectionArray(List.of(new int[]{1, 2, 3, 4, 5, 6}, new int[]{2, 4, 6}, new int[]{2, 6, 8, 10, 11}),
-            new int[]{2, 2, 0})).containsExactly();
+            List.of(2, 2, 0))).containsExactly();
   }
 
   private int[] getIntersectionArray(List<int[]> arrays) {
     return intersectSortedArrays(arrays).toArray();
   }
 
-  private int[] getIntersectionArray(List<int[]> arrays, int[] bounds) {
+  private int[] getIntersectionArray(List<int[]> arrays, List<Integer> bounds) {
     return intersectSortedArrays(arrays, bounds).toArray();
   }
 }

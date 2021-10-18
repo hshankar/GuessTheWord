@@ -1,35 +1,26 @@
 package gtw.query;
 
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Spliterator;
 import java.util.function.IntConsumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 
 // Intersect sorted int arrays
-public class Intersector {
-  private int[] _intersection;
-  private int _count;
+public class IntersectionUtil {
 
-  public Intersector(int[] init) {
-    _intersection = Arrays.copyOf(init, init.length);
-    _count = init.length;
+  private IntersectionUtil() {
   }
 
   public static IntStream intersectSortedArrays(List<int[]> arrays) {
-    int[] bounds = new int[arrays.size()];
-    for (int i=0;i<arrays.size();++i) {
-      bounds[i] = arrays.get(i).length;
-    }
-    return intersectSortedArrays(arrays, bounds);
+    return intersectSortedArrays(arrays, arrays.stream().mapToInt(a -> a.length).boxed().collect(Collectors.toList()));
   }
 
-  public static IntStream intersectSortedArrays(List<int[]> arrays, int[] bounds) {
+  public static IntStream intersectSortedArrays(List<int[]> arrays, List<Integer> bounds) {
     int maxsize = min(bounds);
     if (maxsize == 0) {
       return IntStream.builder().build();
@@ -37,9 +28,8 @@ public class Intersector {
     return StreamSupport.intStream(new SortedIntStream(arrays, bounds), false);
   }
 
-
   private static boolean matchesAll(int value, List<int[]> arrays, int[] indices) {
-    for (int i=0;i<indices.length;++i) {
+    for (int i = 0; i < indices.length; ++i) {
       if (arrays.get(i)[indices[i]] != value) {
         return false;
       }
@@ -47,7 +37,7 @@ public class Intersector {
     return true;
   }
 
-  private static int min(int[] bounds) {
+  private static int min(List<Integer> bounds) {
     int min = Integer.MAX_VALUE;
     for (int i : bounds) {
       if (i < min) {
@@ -77,18 +67,18 @@ public class Intersector {
 
   private static class SortedIntStream implements Spliterator.OfInt {
     private final List<int[]> _arrays;
-    private final int[] _bounds;
+    private final List<Integer> _bounds;
     private PriorityQueue<ValueAndArrayIdx> _pq;
-    private int [] _indices;
+    private int[] _indices;
     private boolean _ended = false;
 
-    public SortedIntStream(List<int[]> arrays, int[] bounds) {
+    public SortedIntStream(List<int[]> arrays, List<Integer> bounds) {
       _arrays = arrays;
       _bounds = bounds;
       _pq = new PriorityQueue<>(Comparator.comparing(ValueAndArrayIdx::getValue));
       _indices = new int[_arrays.size()];
       for (int i = 0; i < _indices.length; ++i) {
-        if (_indices[i] >= bounds[i]) {
+        if (_indices[i] >= bounds.get(i)) {
           _ended = true;
           break;
         }
@@ -108,7 +98,7 @@ public class Intersector {
 
     @Override
     public int characteristics() {
-      return ORDERED | DISTINCT | SORTED | NONNULL | IMMUTABLE ;
+      return ORDERED | DISTINCT | SORTED | NONNULL | IMMUTABLE;
     }
 
     @Override
@@ -126,12 +116,12 @@ public class Intersector {
         ValueAndArrayIdx lowest = _pq.poll();
         if (matchesAll(lowest.getValue(), _arrays, _indices)) {
           action.accept(lowest.getValue());
-          for (int i=1;i< _arrays.size();++i) {
+          for (int i = 1; i < _arrays.size(); ++i) {
             _pq.poll(); // remove these elems from PQ as they have matched
           }
           for (int i = 0; i < _indices.length; ++i) {
             _indices[i]++;
-            if (_indices[i] >= _bounds[i]) {
+            if (_indices[i] >= _bounds.get(i)) {
               _ended = true;
               break outer;
             }
@@ -141,7 +131,7 @@ public class Intersector {
         } else {
           int idx = lowest.getArrayIdx();
           _indices[idx]++;
-          if (_indices[idx] >= _bounds[idx]) {
+          if (_indices[idx] >= _bounds.get(idx)) {
             _ended = true;
             break outer;
           }

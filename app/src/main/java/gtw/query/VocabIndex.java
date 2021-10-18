@@ -4,6 +4,7 @@ import gtw.Vocabulary;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 
@@ -47,12 +48,14 @@ public class VocabIndex {
       ret = _words.stream();
     } else {
       List<int[]> arrays = new ArrayList<>(reqChars.length);
-      int[] bounds = new int[reqChars.length];
+      List<Integer> boundsList = new ArrayList<>();
       for (int i = 0; i < reqChars.length; ++i) {
-        arrays.add(_invIdx[i]);
-        bounds[i] = _counts[i];
+        if (reqChars[i]) {
+          arrays.add(_invIdx[i]);
+          boundsList.add(_counts[i]);
+        }
       }
-      ret = Intersector.intersectSortedArrays(arrays, bounds).mapToObj(_words::get);
+      ret = IntersectionUtil.intersectSortedArrays(arrays, boundsList).mapToObj(_words::get);
     }
     if (query.getMinLength() > 0 || query.getMaxLength() < Integer.MAX_VALUE) {
       ret = ret.filter(s -> s.length() >= query.getMinLength() && s.length() <= query.getMaxLength());
